@@ -1,0 +1,90 @@
+/* 
+ * File:   Display.h
+ * Author: Gilcesar Avila
+ *
+ * Created on 27 de Agosto de 2014, 10:56
+ */
+
+#include <Display.h>
+
+Display::Display() {
+    lcd = new LiquidCrystal(8, 9, 4, 5, 6, 7);
+    lcd->begin(16, 2);
+    //keyListeners = new LinkedList<KeyListener>();
+    //Logger.info(" ");
+    Log.info("LCD Inicializado!");
+}
+
+Display::~Display() {
+    //delete lcd;
+    //delete keyListener;
+}
+
+void Display::setListener(KeyListener* listener){
+    this->keyListener = listener;
+}
+
+//void Display::addListener(KeyListener& listener){
+//    this->keyListeners.add(&listener);
+//}
+void Display::processKey() {
+    //int key = analogRead(0);
+    Key key = getKey();
+    if(keyListener != NULL && key != KEY_NONE){
+        keyListener->onKeyPress(key);
+    }
+    
+//    if (!keyListeners.isEmpty() && key != KEY_NONE) {
+//        while(keyListeners.hasNext()){
+//            keyListeners.next()->onKeyPress(key);
+//        }
+//    }
+    Log.log(DEBUG, "Key Pressed=%d", key);
+}
+
+Key Display::getKey() {
+    int key = analogRead(0);
+
+    if (key < 50) return KEY_RIGHT;
+    if (key < 150) return KEY_UP;
+    if (key < 350) return KEY_DOWN;
+    if (key < 500) return KEY_LEFT;
+    if (key < 700) return KEY_SELECT;
+    return KEY_NONE;
+}
+
+void Display::printUp(int col, const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+
+    lcd->setCursor(col, 0);
+    lcd->print(tmp);
+    Log.log(DEBUG, "Display.Up=%s", tmp);
+    va_end(ap);
+}
+
+void Display::printDown(int col, const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+
+    lcd->setCursor(col, 1);
+    lcd->print(tmp);
+    Log.log(DEBUG, "Display.Down=%s", tmp);
+    va_end(ap);
+}
+
+void Display::clearTop() {
+    printUp(0, "                ");
+}
+
+void Display::clearBottom() {
+    printDown(0, "                ");
+}
+
+void Display::clear() {
+    lcd->clear();
+}
