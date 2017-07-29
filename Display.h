@@ -43,9 +43,15 @@ public:
 
     Key getKey();
 
+    void printUp(boolean clear, int col, const char * __fmt, ...);
+    void printUp(boolean clear, const char * __fmt, ...);
     void printUp(int col, const char * __fmt, ...);
+    void printUp(const char * __fmt, ...);
 
+    void printDown(boolean clear, int col, const char * __fmt, ...);
+    void printDown(boolean clear, const char * __fmt, ...);
     void printDown(int col, const char * __fmt, ...);
+    void printDown(const char * __fmt, ...);
 
     void clearTop();
 

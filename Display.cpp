@@ -53,7 +53,11 @@ Key Display::getKey() {
     return KEY_NONE;
 }
 
-void Display::printUp(int col, const char * __fmt, ...) {
+void Display::printUp(boolean clear, int col, const char * __fmt, ...) {
+    if(clear){
+        clearTop();
+    }
+    
     char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
@@ -63,9 +67,40 @@ void Display::printUp(int col, const char * __fmt, ...) {
     lcd->print(tmp);
     Log.log(DEBUG, "Display.Up=%s", tmp);
     va_end(ap);
+    
 }
 
-void Display::printDown(int col, const char * __fmt, ...) {
+void Display::printUp(int col, const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+    printUp(false, col, tmp);
+    va_end(ap);
+}
+
+void Display::printUp(boolean clear, const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+    printUp(clear, 0, tmp);
+    va_end(ap);
+}
+
+void Display::printUp(const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+    printUp(false, 0, tmp);
+    va_end(ap);
+}
+
+void Display::printDown(boolean clear, int col, const char * __fmt, ...) {
+    if(clear){
+        clearBottom();
+    }
     char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
@@ -77,12 +112,39 @@ void Display::printDown(int col, const char * __fmt, ...) {
     va_end(ap);
 }
 
+void Display::printDown(int col, const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+    printDown(false, col, tmp);
+    va_end(ap);
+}
+
+void Display::printDown(boolean clear, const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+    printDown(clear, 0, tmp);
+    va_end(ap);
+}
+
+void Display::printDown(const char * __fmt, ...) {
+    char tmp[17];
+    va_list ap;
+    va_start(ap, __fmt);
+    vsprintf(tmp, __fmt, ap);
+    printDown(false, 0, tmp);
+    va_end(ap);
+}
+
 void Display::clearTop() {
-    printUp(0, "                ");
+    printUp("                ");
 }
 
 void Display::clearBottom() {
-    printDown(0, "                ");
+    printDown("                ");
 }
 
 void Display::clear() {

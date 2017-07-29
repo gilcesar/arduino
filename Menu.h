@@ -7,88 +7,64 @@
 
 
 #ifndef OPTIONCOMMAND_H
-#define	OPTIONCOMMAND_H
-#include "LinkedList.h"
+#define OPTIONCOMMAND_H
 
-class MenuAction {
-private:
-public:
 
-    MenuAction() {
-    }
-    virtual boolean canExecute() = 0;
-    virtual void execute() = 0;
-};
+#include <LinkedList.h>
+
+//class MenuAction {
+//public:
+//    virtual boolean canExecute() = 0;
+//    virtual void execute() = 0;
+//};
+
+
+//void my_int_func(int x)
+//{
+//    printf( "%d\n", x );
+//}
+//
+//
+//
+//int main()
+//{
+//    void (*foo)(int);
+//    /* the ampersand is actually optional */
+//    foo = &my_int_func;
+//
+//    return 0;
+//}
+
 
 class Menu {
 private:
     LinkedList<Menu> items;
-    Menu * owner;
-    String textTop;
-    String textBottom;
-    MenuAction * action;
+    String text;
+    //MenuAction *action;
+    typedef void (*ActionFunc)(int);
+    ActionFunc action;
+    int param;
 public:
 
-    Menu() {
-        action = NULL;
-    }
+    Menu();
 
-    //    Option(Option *owner){
-    //        this->owner = owner;
-    //        cmd = NULL;
-    //    }
+    Menu(String text);
 
-    Menu(/*Option *owner, */String textTop, String textBottom) {
-        this->textTop = textTop;
-        this->textBottom = textBottom;
-        //this->owner = owner;
-        action = NULL;
-    }
+    ~Menu();
 
-    ~Menu() {
-        items.clear();
-    }
+    void addItem(Menu item);
+    LinkedList<Menu> getItems();
 
-    //    void setOwner(Option *owner){
-    //        this->owner = owner;
-    //    }
+    //void setAction(MenuAction &action);
+//    MenuAction getAction();
+    
+    void setAction(ActionFunc af, int p);
+    void execute();
 
-    void addMenuItem(Menu *menuItem) {
-        if (menuItem != NULL) {
-            items.add(menuItem);
-            menuItem->owner = this;
-        }
-    }
-
-    LinkedList<Menu> getOptions() {
-        return items;
-    }
-
-    void setCommand(MenuAction * cmd) {
-        this->action = cmd;
-    }
-
-    MenuAction * getCommand() {
-        return action;
-    }
-
-    void setTextBottom(String textBottom) {
-        this->textBottom = textBottom;
-    }
-
-    String getTextBottom() const {
-        return textBottom;
-    }
-
-    void setTextTop(String textTop) {
-        this->textTop = textTop;
-    }
-
-    String getTextTop() const {
-        return textTop;
-    }
+    void setText(String text);
+    String getText();
 
 };
 
-#endif	/* OPTIONCOMMAND_H */
+#endif /* OPTIONCOMMAND_H */
 

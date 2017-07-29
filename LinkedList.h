@@ -13,22 +13,18 @@
 
 template <class T>
 struct Node {
-    T *element;
+    T element;
     Node<T> *next;
-
-    ~Node() {
-        delete element;
-    }
 };
 
-template <class T>
+template <typename T>
 class LinkedList {
     Node<T> *_head;
     Node<T> *_tail;
     Node<T> *_curr;
     uint16_t _size;
 
-    Node<T> *createNode(T *t) {
+    Node<T>* createNode(T t) {
         Node<T> *n = new Node<T>;
         n->element = t;
         n->next = NULL;
@@ -45,7 +41,7 @@ public:
         clear();
     }
 
-    void add(T *t) {
+    void add(T t) {
         if (_tail == NULL) {//First element
             _tail = _head = createNode(t);
         } else {
@@ -54,16 +50,16 @@ public:
         _size++;
     }
 
-    T* first() {
-        return _head == NULL ? NULL : _head->element;
+    T first() {
+        return _head == NULL ? NULL : _head.element;
     }
 
-    T* last() {
-        return _tail == NULL ? NULL : _tail->element;
+    T last() {
+        return _tail == NULL ? NULL : _tail.element;
     }
 
-    T* current() {
-        return _curr == NULL ? NULL : _curr->element;
+    T current() {
+        return _curr == NULL ? NULL : _curr.element;
     }
 
     void resetCurrent() {
@@ -90,11 +86,22 @@ public:
         }
     }
 
-    T* next() {
+    T next() {
         _curr = _curr == NULL ? _head : _curr->next;
         return _curr == NULL ? NULL : _curr->element;
     }
 
+    T get(uint16_t index){
+        if (index >= 0 && index < size()) {
+            Node<T> * n = _head;
+            for(uint16_t i=0; i<index; i++){
+                n = n->next;
+            }
+            return n->element;
+        }
+        return T();
+    }
+    
     boolean hasNext() {
         return _curr == NULL ? !isEmpty() : _curr->next != NULL;
     }

@@ -5,90 +5,49 @@
  * Created on August 27, 2014, 1:49 PM
  */
 
+#include <Menu.h>
 
-#ifndef OPTIONCOMMAND_H
-#define	OPTIONCOMMAND_H
-#include "LinkedList.h"
+Menu::Menu() {
+    items = LinkedList<Menu>();
+}
 
-class MenuAction {
-private:
-public:
+Menu::Menu(String text) {
+    this->text = text;
+}
 
-    MenuAction() {
-    }
-    virtual boolean canExecute() = 0;
-    virtual void execute() = 0;
-};
+Menu::~Menu() {
+    items.clear();
+}
 
-class Menu {
-private:
-    LinkedList<Menu> items;
-    Menu * owner;
-    String textTop;
-    String textBottom;
-    MenuAction * action;
-public:
+void Menu::addItem(Menu item) {
+    items.add(item);
+}
 
-    Menu() {
-        action = NULL;
-    }
+LinkedList<Menu> Menu::getItems() {
+    return items;
+}
 
-    //    Option(Option *owner){
-    //        this->owner = owner;
-    //        cmd = NULL;
-    //    }
+//void Menu::setAction(MenuAction &action) {
+//    this->action = &action;
+//}
 
-    Menu(/*Option *owner, */String textTop, String textBottom) {
-        this->textTop = textTop;
-        this->textBottom = textBottom;
-        //this->owner = owner;
-        action = NULL;
-    }
+void Menu::setAction(ActionFunc af, int i){
+    this->action = af;
+    this->param = i;
+}
+void Menu::execute(){
+    action(this->param);
+}
 
-    ~Menu() {
-        items.clear();
-    }
+//MenuAction Menu::getAction() {
+//    return &action;
+//}
 
-    //    void setOwner(Option *owner){
-    //        this->owner = owner;
-    //    }
+void Menu::setText(String text) {
+    this->text = text;
+}
 
-    void addMenuItem(Menu *menuItem) {
-        if (menuItem != NULL) {
-            items.add(menuItem);
-            menuItem->owner = this;
-        }
-    }
-
-    LinkedList<Menu> getOptions() {
-        return items;
-    }
-
-    void setCommand(MenuAction * cmd) {
-        this->action = cmd;
-    }
-
-    MenuAction * getCommand() {
-        return action;
-    }
-
-    void setTextBottom(String textBottom) {
-        this->textBottom = textBottom;
-    }
-
-    String getTextBottom() const {
-        return textBottom;
-    }
-
-    void setTextTop(String textTop) {
-        this->textTop = textTop;
-    }
-
-    String getTextTop() const {
-        return textTop;
-    }
-
-};
-
-#endif	/* OPTIONCOMMAND_H */
+String Menu::getText(){
+    return this->text;
+}
 
