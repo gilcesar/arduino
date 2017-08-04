@@ -6,8 +6,10 @@
  */
 
 #include <Logger.h>
+#include <string.h>
+#include <stdio.h>
 
-extern HardwareSerial Serial;
+Logger Log = Logger();
 
 void Logger::formatedLog(char * buf, Level level) {
     //time_t tt = now();

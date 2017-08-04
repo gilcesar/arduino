@@ -12,7 +12,6 @@
 #include <LinkedList.h>
 #include <Logger.h>
 
-extern Logger Log;
 
 enum Key {
     KEY_NONE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, KEY_SELECT

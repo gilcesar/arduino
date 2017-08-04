@@ -8,10 +8,9 @@
 #ifndef Logger_H
 #define	Logger_H
 
-#include <Arduino.h>
-//#include <HardwareSerial.h>
-
-
+#include <inttypes.h>
+#include <HardwareSerial.h>
+extern HardwareSerial Serial;
 
 enum Level {
     TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
@@ -41,7 +40,8 @@ public:
 
     void log(Level level, const char * __fmt, ...);
 
-};
+}extern Log;
+
 
 #endif	/* Logger_H */
 

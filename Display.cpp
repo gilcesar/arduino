@@ -7,7 +7,7 @@
 
 #include <Display.h>
 
-Display::Display() {
+Display::Display() { 
     lcd = new LiquidCrystal(8, 9, 4, 5, 6, 7);
     lcd->begin(16, 2);
     //keyListeners = new LinkedList<KeyListener>();
@@ -39,8 +39,10 @@ void Display::processKey() {
 //            keyListeners.next()->onKeyPress(key);
 //        }
 //    }
-    Log.log(DEBUG, "Key Pressed=%d", key);
-}
+    if(key != KEY_NONE){
+        Log.log(DEBUG, "Key Pressed=%d", key);
+    }
+} 
 
 Key Display::getKey() {
     int key = analogRead(0);
@@ -58,14 +60,15 @@ void Display::printUp(boolean clear, int col, const char * __fmt, ...) {
         clearTop();
     }
     
-    char tmp[17];
+    char tmp[128];
+    char str[17];
     va_list ap;
     va_start(ap, __fmt);
     vsprintf(tmp, __fmt, ap);
-
+    strncpy(str, tmp, sizeof(tmp)>(16-col)? (16-col) : sizeof(tmp));
     lcd->setCursor(col, 0);
-    lcd->print(tmp);
-    Log.log(DEBUG, "Display.Up=%s", tmp);
+    lcd->print(str);
+    //Log.log(DEBUG, "Display.Up=%s", tmp);
     va_end(ap);
     
 }
@@ -101,14 +104,17 @@ void Display::printDown(boolean clear, int col, const char * __fmt, ...) {
     if(clear){
         clearBottom();
     }
-    char tmp[17];
+    char tmp[128];
+    char str[17];
     va_list ap;
     va_start(ap, __fmt);
     vsprintf(tmp, __fmt, ap);
 
     lcd->setCursor(col, 1);
-    lcd->print(tmp);
-    Log.log(DEBUG, "Display.Down=%s", tmp);
+    vsprintf(tmp, __fmt, ap);
+    strncpy(str, tmp, sizeof(tmp)>(16-col)? (16-col) : sizeof(tmp));
+    lcd->setCursor(col, 1);
+    lcd->print(str);
     va_end(ap);
 }
 
