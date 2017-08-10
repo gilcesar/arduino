@@ -9,9 +9,9 @@
 #define	MESSAGE_H
 
 #include <Arduino.h>
-#include <ArduinoJson.h>
+//#include <aJSON.h>
 
-JsonObject& createMessage(JsonBuffer& jsonBuffer);
+//JsonObject& createMessage(JsonBuffer& jsonBuffer);
 
 
 //#include <LinkedList.h>

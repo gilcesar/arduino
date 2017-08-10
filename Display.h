@@ -29,6 +29,7 @@ private:
     
     KeyListener* keyListener;
     Key lastKeyPressed;
+    void print(boolean clear, boolean up, int col, const char * __fmt, va_list ap);
 public:
 
     Display();

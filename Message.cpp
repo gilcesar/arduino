@@ -7,23 +7,23 @@
 
 #include <Message.h>
 
-JsonObject& createMessage(JsonBuffer& jsonBuffer) {
-  JsonObject& root = jsonBuffer.createObject();
-
-  JsonArray& analogValues = root.createNestedArray("analog");
-  for (int pin = 0; pin < 6; pin++) {
-    int value = analogRead(pin);
-    analogValues.add(value);
-  }
-
-  JsonArray& digitalValues = root.createNestedArray("digital");
-  for (int pin = 0; pin < 14; pin++) {
-    int value = digitalRead(pin);
-    digitalValues.add(value);
-  }
-
-  return root;
-}
+//JsonObject& createMessage(JsonBuffer& jsonBuffer) {
+//  JsonObject& root = jsonBuffer.createObject();
+//
+//  JsonArray& analogValues = root.createNestedArray("analog");
+//  for (int pin = 0; pin < 6; pin++) {
+//    int value = analogRead(pin);
+//    analogValues.add(value);
+//  }
+//
+//  JsonArray& digitalValues = root.createNestedArray("digital");
+//  for (int pin = 0; pin < 14; pin++) {
+//    int value = digitalRead(pin);
+//    digitalValues.add(value);
+//  }
+//
+//  return root;
+//}
 
 
 //#include <Arduino.h>

@@ -6,8 +6,9 @@
  */
 
 #include <Display.h>
+//#include <stdio.h>
 
-Display::Display() { 
+Display::Display() {
     lcd = new LiquidCrystal(8, 9, 4, 5, 6, 7);
     lcd->begin(16, 2);
     //keyListeners = new LinkedList<KeyListener>();
@@ -20,29 +21,30 @@ Display::~Display() {
     //delete keyListener;
 }
 
-void Display::setListener(KeyListener* listener){
+void Display::setListener(KeyListener* listener) {
     this->keyListener = listener;
 }
 
 //void Display::addListener(KeyListener& listener){
 //    this->keyListeners.add(&listener);
 //}
+
 void Display::processKey() {
     //int key = analogRead(0);
     Key key = getKey();
-    if(keyListener != NULL && key != KEY_NONE){
+    if (keyListener != NULL && key != KEY_NONE) {
         keyListener->onKeyPress(key);
     }
-    
-//    if (!keyListeners.isEmpty() && key != KEY_NONE) {
-//        while(keyListeners.hasNext()){
-//            keyListeners.next()->onKeyPress(key);
-//        }
-//    }
-    if(key != KEY_NONE){
+
+    //    if (!keyListeners.isEmpty() && key != KEY_NONE) {
+    //        while(keyListeners.hasNext()){
+    //            keyListeners.next()->onKeyPress(key);
+    //        }
+    //    }
+    if (key != KEY_NONE) {
         Log.log(DEBUG, "Key Pressed=%d", key);
     }
-} 
+}
 
 Key Display::getKey() {
     int key = analogRead(0);
@@ -56,92 +58,75 @@ Key Display::getKey() {
 }
 
 void Display::printUp(boolean clear, int col, const char * __fmt, ...) {
-    if(clear){
-        clearTop();
-    }
-    
-    char tmp[128];
-    char str[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-    strncpy(str, tmp, sizeof(tmp)>(16-col)? (16-col) : sizeof(tmp));
-    lcd->setCursor(col, 0);
-    lcd->print(str);
-    //Log.log(DEBUG, "Display.Up=%s", tmp);
-    va_end(ap);
-    
+    print(clear, true, col, __fmt, ap);
 }
 
 void Display::printUp(int col, const char * __fmt, ...) {
-    char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-    printUp(false, col, tmp);
-    va_end(ap);
+    print(true, true, col, __fmt, ap);
 }
 
 void Display::printUp(boolean clear, const char * __fmt, ...) {
-    char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-    printUp(clear, 0, tmp);
-    va_end(ap);
+    print(clear, true, 0, __fmt, ap);
 }
 
 void Display::printUp(const char * __fmt, ...) {
-    char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-    printUp(false, 0, tmp);
-    va_end(ap);
+    print(true, true, 0, __fmt, ap);
 }
 
 void Display::printDown(boolean clear, int col, const char * __fmt, ...) {
-    if(clear){
-        clearBottom();
-    }
-    char tmp[128];
-    char str[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-
-    lcd->setCursor(col, 1);
-    vsprintf(tmp, __fmt, ap);
-    strncpy(str, tmp, sizeof(tmp)>(16-col)? (16-col) : sizeof(tmp));
-    lcd->setCursor(col, 1);
-    lcd->print(str);
-    va_end(ap);
+    print(clear, false, col, __fmt, ap);
 }
 
 void Display::printDown(int col, const char * __fmt, ...) {
-    char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-    printDown(false, col, tmp);
-    va_end(ap);
+    print(true, false, col, __fmt, ap);
 }
 
 void Display::printDown(boolean clear, const char * __fmt, ...) {
-    char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
-    vsprintf(tmp, __fmt, ap);
-    printDown(clear, 0, tmp);
-    va_end(ap);
+    print(clear, false, 0, __fmt, ap);
 }
 
 void Display::printDown(const char * __fmt, ...) {
-    char tmp[17];
     va_list ap;
     va_start(ap, __fmt);
+    print(true, false, 0, __fmt, ap);
+}
+
+void Display::print(boolean clear, boolean up, int col, const char * __fmt, va_list ap) {
+    if (up && clear) {
+        lcd->setCursor(0, 0);
+        lcd->print("                ");
+    }
+    if (!up && clear) {
+        lcd->setCursor(0, 1);
+        lcd->print("                ");
+    }
+    char tmp[256];
+    char str[17];
+    memset(tmp, 0, 256);
+    memset(str, 0, 17);
     vsprintf(tmp, __fmt, ap);
-    printDown(false, 0, tmp);
+    strncpy(str, tmp, strlen(tmp)>(16 - col) ? (16 - col) : strlen(tmp));
+
+    lcd->setCursor(col, up ? 0 : 1);
+    lcd->print(str);
+    if (strlen(tmp) > 16) {
+        Log.warn("Texto maior que o suportado pelo o display max=16");
+        Log.warn(tmp);
+    }
     va_end(ap);
 }
 
